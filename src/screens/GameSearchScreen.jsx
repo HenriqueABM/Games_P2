@@ -1,41 +1,36 @@
 import React, { useState } from 'react';
-import { View, FlatList, Image, StyleSheet } from 'react-native';
-import { Appbar, Searchbar, Card, Text } from 'react-native-paper';
+import { View, FlatList, StyleSheet } from 'react-native';
+import { TextInput, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { searchGames } from '../services/rawgApi';
 
-export default function GameSearchScreen({ navigation }) {
+export default function GameSearchScreen() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
 
   const handleSearch = async () => {
-    if (!query) return;
     const games = await searchGames(query);
     setResults(games);
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <Appbar.Header>
-        <Appbar.Content title="Buscar Jogos" />
-      </Appbar.Header>
-
-      <Searchbar
-        placeholder="Digite o nome do jogo"
+    <View style={styles.container}>
+      <TextInput
+        label="Buscar jogo"
         value={query}
         onChangeText={setQuery}
-        onSubmitEditing={handleSearch}
-        style={{ margin: 16 }}
+        mode="outlined"
+        style={styles.input}
       />
-
+      <Button mode="contained" onPress={handleSearch} style={styles.button}>Buscar</Button>
       <FlatList
         data={results}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
           <Card style={styles.card}>
-            <Card.Title title={item.name} />
-            {item.background_image && (
-              <Image source={{ uri: item.background_image }} style={styles.image} />
-            )}
+            <Card.Content>
+              <Title>{item.name}</Title>
+              <Paragraph>Nota: {item.rating}</Paragraph>
+            </Card.Content>
           </Card>
         )}
       />
@@ -44,11 +39,18 @@ export default function GameSearchScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  card: {
-    margin: 8,
+  container: {
+    padding: 16,
+    flex: 1,
   },
-  image: {
-    height: 180,
-    width: '100%',
+  input: {
+    marginBottom: 10,
+  },
+  button: {
+    marginBottom: 20,
+  },
+  card: {
+    marginBottom: 10,
   },
 });
+
