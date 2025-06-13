@@ -42,11 +42,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#001F3F',  // Fundo azul escuro pra combinar com as outras telas
+    backgroundColor: '#001F3F',
   },
   text: {
     fontSize: 18,
-    color: '#7FDBFF',  // Azul claro pra combinar com o resto do app
+    color: '#7FDBFF',
     marginBottom: 10,
   },
 });

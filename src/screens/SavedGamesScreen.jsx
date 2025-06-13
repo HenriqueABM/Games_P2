@@ -20,7 +20,7 @@ export default function SavedGamesScreen({ navigation }) {
 
       if (jsonValue !== null) {
         const parsed = JSON.parse(jsonValue);
-        // Ordenar por data de criação (mais novos primeiro)
+       
         const sorted = parsed.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setGames(sorted);
       } else {

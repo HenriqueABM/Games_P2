@@ -19,10 +19,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     padding: 20,
-    backgroundColor: '#001F3F', // Azul escuro
+    backgroundColor: '#001F3F', 
   },
   title: {
-    color: '#7FDBFF', // Azul claro
+    color: '#7FDBFF',
     fontSize: 24,
     textAlign: 'center',
     marginBottom: 20,
