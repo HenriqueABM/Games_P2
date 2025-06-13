@@ -2,11 +2,13 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 import HomeScreen from '../screens/HomeScreen';
 import GameFormScreen from '../screens/GameFormScreen';
 import SavedGamesScreen from '../screens/SavedGamesScreen';
 import StatsScreen from '../screens/StatsScreen';
 import GameSearchScreen from '../screens/GameSearchScreen';
+import GameDetailsScreen from '../screens/GameDetailsScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -48,6 +50,11 @@ function MainTabs() {
             <MaterialCommunityIcons name="plus-box" color={color} size={size} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            navigation.navigate('Adicionar Jogo');
+          },
+        })}
       />
       <Tab.Screen
         name="Meus Jogos"
@@ -57,6 +64,11 @@ function MainTabs() {
             <MaterialCommunityIcons name="folder" color={color} size={size} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            navigation.navigate('Meus Jogos', { refresh: true });
+          },
+        })}
       />
       <Tab.Screen
         name="Estatísticas"
@@ -73,9 +85,21 @@ function MainTabs() {
 
 export default function AppNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Tabs" component={MainTabs} />
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Tabs"
+        component={MainTabs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="GameDetails"
+        component={GameDetailsScreen}
+        options={{
+          title: 'Detalhes do Jogo',
+          headerStyle: { backgroundColor: '#7FDBFF' },
+          headerTintColor: 'white',
+        }}
+      />
     </Stack.Navigator>
   );
 }
-

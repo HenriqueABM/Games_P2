@@ -1,55 +1,60 @@
 import React, { useState } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
-import { TextInput, Button, Card, Title, Paragraph } from 'react-native-paper';
-import { searchGames } from '../services/rawgApi';
+import { View, TextInput, Button, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
-export default function GameSearchScreen() {
-  const [query, setQuery] = useState('');
+const API_KEY = '308369a9629441e082a1705aa6a40c8e';
+
+const GameSearchScreen = () => {
+  const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
+  const navigation = useNavigation();
 
-  const handleSearch = async () => {
-    const games = await searchGames(query);
-    setResults(games);
+  const searchGames = async () => {
+    try {
+      const response = await axios.get(`https://api.rawg.io/api/games`, {
+        params: {
+          key: API_KEY,
+          search: search,
+        },
+      });
+      setResults(response.data.results);
+    } catch (error) {
+      console.error('Erro ao buscar jogos:', error);
+    }
+  };
+
+  const handleGamePress = (game) => {
+    navigation.navigate('GameDetails', { gameId: game.id });
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        label="Buscar jogo"
-        value={query}
-        onChangeText={setQuery}
-        mode="outlined"
         style={styles.input}
+        placeholder="Buscar jogo"
+        value={search}
+        onChangeText={setSearch}
       />
-      <Button mode="contained" onPress={handleSearch} style={styles.button}>Buscar</Button>
+      <Button title="Buscar" onPress={searchGames} />
       <FlatList
         data={results}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <Card style={styles.card}>
-            <Card.Content>
-              <Title>{item.name}</Title>
-              <Paragraph>Nota: {item.rating}</Paragraph>
-            </Card.Content>
-          </Card>
+          <TouchableOpacity onPress={() => handleGamePress(item)} style={styles.item}>
+            <Text style={styles.title}>{item.name}</Text>
+          </TouchableOpacity>
         )}
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    flex: 1,
-  },
-  input: {
-    marginBottom: 10,
-  },
-  button: {
-    marginBottom: 20,
-  },
-  card: {
-    marginBottom: 10,
-  },
+  container: { flex: 1, padding: 16 },
+  input: { borderWidth: 1, borderColor: '#ccc', padding: 8, marginBottom: 8 },
+  item: { padding: 12, borderBottomWidth: 1, borderBottomColor: '#eee' },
+  title: { fontSize: 16 },
 });
+
+export default GameSearchScreen;
